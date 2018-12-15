@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout android:id="@+id/ll_headers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="3sp"
+        android:background="@color/colorPrimaryDark"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/txt_service_header"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Servicio"/>
+        <TextView
+            android:id="@+id/txt_bus_plate_header"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Patente"/>
+        <TextView
+            android:id="@+id/txt_arrival_estimation_header"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="Tiempo estimado de llegada"/>
+        <TextView
+            android:id="@+id/txt_distance_header"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Distancia (en mts.)"/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/txt_service"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="2"/>
+    <TextView
+        android:id="@+id/txt_bus_plate"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="2"/>
+    <TextView
+        android:id="@+id/txt_arrival_estimation"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="4"/>
+    <TextView
+        android:id="@+id/txt_distance"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="2"/>
+</GridLayout>
