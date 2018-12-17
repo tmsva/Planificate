@@ -50,4 +50,8 @@ public class MainActivityViewModel extends AndroidViewModel {
     public void insertBip(Bip bip) {
         mRepo.insertBip(bip);
     }
+
+    public void getMapForLocation(double longitude, double latitude) {
+        mRepo.getMapForLocation(longitude, latitude);
+    }
 }

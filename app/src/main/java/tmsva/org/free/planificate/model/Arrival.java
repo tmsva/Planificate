@@ -28,7 +28,7 @@ public class Arrival {
     private String busDistance;
 
     public String getBusPlateNumber() {
-        return busPlateNumber;
+        return busPlateNumber == null ? "" : busPlateNumber;
     }
 
     public void setBusPlateNumber(String busPlateNumber) {
@@ -76,7 +76,7 @@ public class Arrival {
     }
 
     public String getBusDistance() {
-        return busDistance == null ? busDistance : busDistance.concat(" mts.");
+        return busDistance == null ? "" : busDistance.concat(" mts.");
     }
 
     public void setBusDistance(String busDistance) {
