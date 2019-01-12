@@ -1,12 +1,10 @@
-package tmsva.org.free.planificate.persistence;
+package tmsva.org.free.planificate.data.database;
 
 import android.content.Context;
 
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import tmsva.org.free.planificate.dao.BipDao;
-import tmsva.org.free.planificate.model.Bip;
 
 @Database(entities = {Bip.class},
         version = 1)

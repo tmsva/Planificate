@@ -1,4 +1,4 @@
-package tmsva.org.free.planificate.util;
+package tmsva.org.free.planificate.utilities;
 
 public class Parser {
 

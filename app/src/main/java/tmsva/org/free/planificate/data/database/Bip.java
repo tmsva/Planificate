@@ -1,4 +1,4 @@
-package tmsva.org.free.planificate.model;
+package tmsva.org.free.planificate.data.database;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;

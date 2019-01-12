@@ -1,4 +1,4 @@
-package tmsva.org.free.planificate.dao;
+package tmsva.org.free.planificate.data.database;
 
 import java.util.List;
 
@@ -7,7 +7,6 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import tmsva.org.free.planificate.model.Bip;
 
 @Dao
 public interface BipDao {

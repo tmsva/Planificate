@@ -2,58 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20sp"
-    android:paddingStart="0sp"
-    android:paddingEnd="0sp">
-    <LinearLayout
-        android:id="@+id/ll_bip_balance"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
-        <Button
-            android:id="@+id/btn_add_bip"
-            android:layout_width="40sp"
-            android:layout_height="wrap_content"
-            android:text="+"
-            android:onClick="onClick"/>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
-            <TextView
-                android:text="$0"
-                android:id="@+id/txt_bip_balance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/txt_balance_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ultima fecha actualizacion"/>
-        </LinearLayout>
-        <Button
-            android:id="@+id/btn_refresh_bip_balance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Refresh"
-            android:onClick="onClick" />
-    </LinearLayout>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="10sp">
     <LinearLayout
         android:id="@+id/ll_query_services"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:orientation="horizontal"
+        android:layout_alignParentTop="true"
         android:layout_marginBottom="10sp"
-        android:layout_below="@id/ll_bip_balance">
+        android:visibility="gone">
         <EditText
             android:id="@+id/edt_stop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="PARADERO"/>
         <Button
-            android:id="@+id/btn_get_location"
+            android:id="@+id/btn_services_by_location"
             android:layout_width="40sp"
             android:layout_height="wrap_content"
             android:onClick="onClick"/>
@@ -70,7 +36,7 @@
             android:onClick="onClick"/>
     </LinearLayout>
 
-    <com.github.chrisbanes.photoview.PhotoView
+    <!--<com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/pv_metro_plane"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -94,18 +60,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:numColumns="4"/>
-    </LinearLayout>
+    </LinearLayout>-->
 
-    <LinearLayout
-        android:id="@+id/ll_progressbar"
+    <FrameLayout
+        android:id="@+id/fl_main_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:background="#ffffff"
-        android:gravity="center"
-        android:visibility="gone">
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+        android:layout_above="@id/bnv_main"
+        android:layout_below="@id/ll_query_services">
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/pv_metro_plane"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/metrored_servicios_full_2018_08"
+            android:scaleType="centerCrop"
+            android:visibility="gone"/>
+    </FrameLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bnv_main"
+        app:menu="@menu/bnv_main_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        app:elevation="7sp"
+        android:background="?android:attr/windowBackground"/>
 </RelativeLayout>

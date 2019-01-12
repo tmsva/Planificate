@@ -1,4 +1,4 @@
-package tmsva.org.free.planificate.viewmodel;
+package tmsva.org.free.planificate.viewmodels;
 
 import android.app.Application;
 
@@ -7,10 +7,10 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import tmsva.org.free.planificate.model.ArrivalsRs;
-import tmsva.org.free.planificate.model.Bip;
-import tmsva.org.free.planificate.model.BipRs;
-import tmsva.org.free.planificate.repository.MainActivityRepository;
+import tmsva.org.free.planificate.data.network.ArrivalsRs;
+import tmsva.org.free.planificate.data.database.Bip;
+import tmsva.org.free.planificate.data.network.BipRs;
+import tmsva.org.free.planificate.data.MainActivityRepository;
 
 public class MainActivityViewModel extends AndroidViewModel {
 
@@ -39,8 +39,8 @@ public class MainActivityViewModel extends AndroidViewModel {
         return mArrivals;
     }
 
-    public void getNextArrivalsFor(String stopId) {
-        mRepo.getNextArrivalsFor(stopId);
+    public void getNextArrivalsBy(String stopId) {
+        mRepo.getNextArrivalsBy(stopId);
     }
 
     public void getBipBalance() {

@@ -1,4 +1,4 @@
-package tmsva.org.free.planificate.repository;
+package tmsva.org.free.planificate.data;
 
 import android.app.Application;
 import android.os.AsyncTask;
@@ -11,16 +11,14 @@ import androidx.lifecycle.MutableLiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import tmsva.org.free.planificate.dao.BipDao;
-import tmsva.org.free.planificate.model.ArrivalsRs;
-import tmsva.org.free.planificate.model.Bip;
-import tmsva.org.free.planificate.model.BipRs;
-import tmsva.org.free.planificate.model.MapResults;
-import tmsva.org.free.planificate.model.MapRs;
-import tmsva.org.free.planificate.model.RetrofitFactory;
-import tmsva.org.free.planificate.model.Stop;
-import tmsva.org.free.planificate.persistence.PlanificateRoomDb;
-import tmsva.org.free.planificate.webservice.TransantiagoService;
+import tmsva.org.free.planificate.data.database.BipDao;
+import tmsva.org.free.planificate.data.network.ArrivalsRs;
+import tmsva.org.free.planificate.data.database.Bip;
+import tmsva.org.free.planificate.data.network.BipRs;
+import tmsva.org.free.planificate.data.network.MapRs;
+import tmsva.org.free.planificate.data.network.RetrofitFactory;
+import tmsva.org.free.planificate.data.database.PlanificateRoomDb;
+import tmsva.org.free.planificate.data.network.TransantiagoService;
 
 public class MainActivityRepository {
 
@@ -56,25 +54,26 @@ public class MainActivityRepository {
         new insertAsyncTask(mBipDao).execute(bip);
     }
     private static class insertAsyncTask extends AsyncTask<Bip, Void, Void> {
-
         private BipDao mAsyncTaskDao;
 
-        insertAsyncTask(BipDao mBipDao) {
-            mAsyncTaskDao = mBipDao;
+        insertAsyncTask(BipDao bipDao) {
+            mAsyncTaskDao = bipDao;
         }
 
         @Override
-        protected Void doInBackground(final Bip... bips) {
-            mAsyncTaskDao.insert(bips[0]);
+        protected Void doInBackground(final Bip... params) {
+            mAsyncTaskDao.insert(params[0]);
             return null;
         }
     }
 
-    public void getNextArrivalsFor(String stopId) {
-        transantiagoService.getNextArrivalsFor(stopId).enqueue(new Callback<ArrivalsRs>() {
+    public void getNextArrivalsBy(String stopId) {
+        transantiagoService.getNextArrivalsBy(stopId).enqueue(new Callback<ArrivalsRs>() {
             @Override
             public void onResponse(Call<ArrivalsRs> call, Response<ArrivalsRs> response) {
-                if (response.body().getArrivals() != null && response.isSuccessful() && response.body().getArrivals().size() > 0)
+                ArrivalsRs rsBody = response.body();
+                if (rsBody != null && rsBody.getArrivals() != null
+                        && rsBody.getArrivals().size() > 0)
                     mArrivals.setValue(response.body());
                 else mArrivals.setValue(null);
             }
@@ -82,7 +81,7 @@ public class MainActivityRepository {
             @Override
             public void onFailure(Call<ArrivalsRs> call, Throwable t) {
                 retryQueryNextArrivals++;
-                if(retryQueryNextArrivals <= 2) getNextArrivalsFor(stopId);
+                if(retryQueryNextArrivals <= 2) getNextArrivalsBy(stopId);
                 else {
                     retryQueryNextArrivals = 0;
                     mArrivals.setValue(null);
