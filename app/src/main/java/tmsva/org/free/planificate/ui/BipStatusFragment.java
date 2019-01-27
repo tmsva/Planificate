@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ public class BipStatusFragment extends Fragment implements View.OnClickListener 
     private AlertDialog addBipDialog;
     private TextView txtBalanceDate;
     private TextView txtBipBalance;
+    private Button btnRefresh;
 
     private MainActivityViewModel mViewModel;
 
@@ -37,7 +39,6 @@ public class BipStatusFragment extends Fragment implements View.OnClickListener 
 
     private void createComponents() {
         addBipDialog = getAddBipDialog();
-
         initViewModel();
     }
 
@@ -67,8 +68,15 @@ public class BipStatusFragment extends Fragment implements View.OnClickListener 
         //find views inside layout and init those components
         txtBalanceDate = v.findViewById(R.id.txt_balance_date);
         txtBipBalance = v.findViewById(R.id.txt_bip_balance);
+        btnRefresh = v.findViewById(R.id.btn_refresh_bip_balance);
+
         v.findViewById(R.id.btn_add_bip).setOnClickListener(this);
-        v.findViewById(R.id.btn_refresh_bip_balance).setOnClickListener(this);
+        btnRefresh.setOnClickListener(this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         mViewModel.getBipBalance();
     }
 
@@ -94,21 +102,19 @@ public class BipStatusFragment extends Fragment implements View.OnClickListener 
         if (addBipDialog == null) {
             EditText edtBipId = new EditText(getActivity());
             edtBipId.setInputType(InputType.TYPE_CLASS_NUMBER);
-
             addBipDialog = new AlertDialog.Builder(getActivity())
                     .setCancelable(false)
-                    .setTitle("Ingrese número de la tarjeta bip:")
                     .setView(edtBipId)
+                    .setTitle("Ingrese número de la tarjeta bip:")
                     .setNegativeButton("Cancelar", (dialog, which) -> {
                         dialog.dismiss();
                     })
                     .setPositiveButton("Guardar", (dialog, which) -> {
                         Integer bipId = Parser.tryIntParse(edtBipId.getText().toString());
                         if (bipId != null) mViewModel.insertBip(new Bip(bipId));
-                        else
-                            Toast.makeText(getContext(),
-                                    "Número de tarjeta inválido. Intente nuevamente",
-                                    Toast.LENGTH_LONG).show();
+                        else Toast.makeText(getContext(),
+                                "Número de tarjeta inválido. Intente nuevamente",
+                                Toast.LENGTH_LONG).show();
                     })
                     .create();
         }

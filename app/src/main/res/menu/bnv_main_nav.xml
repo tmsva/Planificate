@@ -4,6 +4,4 @@
         android:title="Metro plane" />
     <item android:id="@+id/nav_main"
         android:title="Main" />
-    <item android:id="@+id/nav_bip_status"
-        android:title="Bip status" />
 </menu>

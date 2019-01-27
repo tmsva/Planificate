@@ -3,7 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingTop="10sp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingTop="10sp"
+    tools:context=".ui.MainActivity">
+
+    <fragment
+        android:id="@+id/bip_status"
+        android:name="tmsva.org.free.planificate.ui.BipStatusFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <LinearLayout
         android:id="@+id/ll_query_services"
         android:layout_width="wrap_content"
@@ -12,6 +21,7 @@
         android:orientation="horizontal"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="10sp"
+        android:layout_below="@id/bip_status"
         android:visibility="gone">
         <EditText
             android:id="@+id/edt_stop"
