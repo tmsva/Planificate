@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_headers"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/colorPrimaryDark">
+    <TextView
+        android:id="@+id/txt_service_header"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="Servicio"/>
+    <TextView
+        android:id="@+id/txt_bus_plate_header"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="Patente"/>
+    <TextView
+        android:id="@+id/txt_eta_header"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:text="Tiempo de llegada"/>
+    <TextView
+        android:id="@+id/txt_distance_header"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:text="Distancia"/>
+</LinearLayout>

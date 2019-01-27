@@ -8,18 +8,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,9 +22,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.PermissionChecker;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 import tmsva.org.free.planificate.R;
-import tmsva.org.free.planificate.data.network.Arrival;
+import tmsva.org.free.planificate.adapters.QueryServicesAdapter;
 import tmsva.org.free.planificate.data.network.ArrivalsRs;
+import tmsva.org.free.planificate.utilities.Toaster;
 import tmsva.org.free.planificate.viewmodels.MainActivityViewModel;
 
 public class QueryServicesFragment extends Fragment implements View.OnClickListener {
@@ -38,14 +35,13 @@ public class QueryServicesFragment extends Fragment implements View.OnClickListe
     private EditText mEdtStop;
     private Button btnQueryServices;
     private Button btnServicesByLocation;
-    private GridView gvQueryHeaders;
-    private GridView gvQueryItems;
-    private LinearLayout llProgressBar;
+    private ProgressBar progressBar;
+    private RecyclerView rvArrivals;
+    private QueryServicesAdapter mAdapter;
 
     private static Location mLocation;
     private FusedLocationProviderClient mFusedLocationClient;
     private MainActivityViewModel mViewModel;
-    private ArrayAdapter<String> mItemsAdapter;
 
     private static final String[] QUERY_HEADERS = new String[] {"Servicio", "Patente", "Tiempo estimado de llegada", "Distancia en mts."};
 
@@ -57,33 +53,25 @@ public class QueryServicesFragment extends Fragment implements View.OnClickListe
 
     private void createComponents() {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        initViewModel();
+        mAdapter = new QueryServicesAdapter(getContext(), null);
+        subscribeUi();
     }
 
-    private void initViewModel() {
+    private void subscribeUi() {
         mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
 
-        mViewModel.getArrivals().observe(this, this::setDisplayableArrivalList);
+        mViewModel.getArrivals().observe(this, this::setAdapter);
     }
 
-    private void setDisplayableArrivalList(ArrivalsRs arrivalsRs) {
+    protected void setAdapter(ArrivalsRs arrivalsRs) {
         btnQueryServices.setEnabled(true);
         mEdtStop.setEnabled(true);
         ((MainActivity) getActivity()).hideSoftKeyboard();
-        mItemsAdapter.clear();
-        if(arrivalsRs != null)
-            for(Arrival arrival : arrivalsRs.getArrivals()) {
-                mItemsAdapter.add(arrival.getRouteId());
-                mItemsAdapter.add(arrival.getBusPlateNumber());
-                mItemsAdapter.add(arrival.getArrivalEstimation());
-                mItemsAdapter.add(arrival.getBusDistance());
-            }
-        else Toast.makeText(getActivity(), "No hay respuesta de los servidores!", Toast.LENGTH_SHORT).show();
-
-        mItemsAdapter.notifyDataSetChanged();
-        llProgressBar.setVisibility(View.GONE);
+        mAdapter.clear();
+        if(arrivalsRs != null) mAdapter.updateArrivals(arrivalsRs.getArrivals());
+        else Toaster.show(getContext(), R.string.services_null_response);
+        progressBar.setVisibility(View.GONE);
     }
-
 
     @Nullable
     @Override
@@ -99,22 +87,20 @@ public class QueryServicesFragment extends Fragment implements View.OnClickListe
 
     private void findViewsById(View v) {
         if(v != null) {
+            rvArrivals = v.findViewById(R.id.rv_arrivals);
+
             btnQueryServices = v.findViewById(R.id.btn_query_services);
             btnServicesByLocation = v.findViewById(R.id.btn_services_by_location);
             mEdtStop = v.findViewById(R.id.edt_stop);
-            gvQueryHeaders = v.findViewById(R.id.gv_query_headers);
-            gvQueryItems = v.findViewById(R.id.gv_query_items);
-            llProgressBar = v.findViewById(R.id.ll_progressbar);
-
+            progressBar = v.findViewById(R.id.progressbar);
             btnQueryServices.setOnClickListener(this);
             btnServicesByLocation.setOnClickListener(this);
         }
     }
 
     private void initComponents() {
-        gvQueryHeaders.setAdapter(new ArrayAdapter<>(getActivity(), R.layout.txt_grid_item, Arrays.asList(QUERY_HEADERS)));
-        mItemsAdapter = new ArrayAdapter<>(getActivity(), R.layout.txt_grid_item, new ArrayList<>());
-        gvQueryItems.setAdapter(mItemsAdapter);
+        rvArrivals.setHasFixedSize(true);
+        rvArrivals.setAdapter(mAdapter);
     }
 
     @Override
@@ -139,7 +125,7 @@ public class QueryServicesFragment extends Fragment implements View.OnClickListe
                     btnQueryServices.setEnabled(false);
                     mEdtStop.setEnabled(false);
                     ((MainActivity) getActivity()).hideSoftKeyboard();
-                    llProgressBar.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
                     mViewModel.getNextArrivalsBy(stopId);
                 } else btnQueryServices.setEnabled(true);
                 break;

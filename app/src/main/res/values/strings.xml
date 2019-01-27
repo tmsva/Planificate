@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Planificate</string>
+    <string name="services_null_response">No hay respuesta de los servidores</string>
 </resources>
