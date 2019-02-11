@@ -3,7 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingTop="10sp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingTop="10sp"
+    tools:context=".ui.MainActivity">
+    <fragment
+        android:id="@+id/bip_status"
+        android:name="tmsva.org.free.planificate.ui.BipStatusFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <LinearLayout
         android:id="@+id/ll_query_services"
         android:layout_width="wrap_content"
@@ -12,6 +19,7 @@
         android:orientation="horizontal"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="10sp"
+        android:layout_below="@id/bip_status"
         android:visibility="gone">
         <EditText
             android:id="@+id/edt_stop"
@@ -35,33 +43,6 @@
             android:text="CONSULTAR"
             android:onClick="onClick"/>
     </LinearLayout>
-
-    <!--<com.github.chrisbanes.photoview.PhotoView
-        android:id="@+id/pv_metro_plane"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/plano_metro_santiago_red"
-        android:layout_below="@id/ll_query_services"/>
-
-    <LinearLayout
-        android:id="@+id/ll_query_grid"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/ll_query_services"
-        android:visibility="gone">
-        <GridView
-            android:id="@+id/gv_query_headers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:numColumns="4"/>
-        <GridView
-            android:id="@+id/gv_query_items"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:numColumns="4"/>
-    </LinearLayout>-->
-
     <FrameLayout
         android:id="@+id/fl_main_container"
         android:layout_width="match_parent"
@@ -76,7 +57,6 @@
             android:scaleType="centerCrop"
             android:visibility="gone"/>
     </FrameLayout>
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bnv_main"
         app:menu="@menu/bnv_main_nav"

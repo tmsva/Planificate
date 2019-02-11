@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -12,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import tmsva.org.free.planificate.R;
 import tmsva.org.free.planificate.data.network.Arrival;
+
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class QueryServicesAdapter extends RecyclerView.Adapter<QueryServicesAdapter.ViewHolder> {
     private Context mContext;
@@ -34,9 +37,19 @@ public class QueryServicesAdapter extends RecyclerView.Adapter<QueryServicesAdap
         final Arrival arrival = mArrivals.get(pos);
 
         h.txtService.setText(arrival.getRouteId());
-        h.txtPlate.setText(arrival.getBusPlateNumber());
-        h.txtEta.setText(arrival.getArrivalEstimation());
-        h.txtDistance.setText(arrival.getBusDistance());
+        String eta = arrival.getArrivalEstimation();
+        String plate = arrival.getBusPlateNumber();
+        String distance = arrival.getBusDistance();
+        if(plate == null && distance == null) {
+            //((LinearLayout.LayoutParams) h.txtEta.getLayoutParams()).weight += 6;
+            /*((LinearLayout.LayoutParams) h.txtPlate.getLayoutParams()).weight = 0;
+            ((LinearLayout.LayoutParams) h.txtDistance.getLayoutParams()).weight = 0;*/
+            h.txtPlate.setVisibility(View.GONE);
+            h.txtDistance.setVisibility(View.GONE);
+        }
+        h.txtEta.setText(eta);
+        h.txtPlate.setText(plate);
+        h.txtDistance.setText(distance);
     }
 
     @Override
@@ -55,9 +68,11 @@ public class QueryServicesAdapter extends RecyclerView.Adapter<QueryServicesAdap
     }
 
     public void clear() {
-        int listSize = mArrivals.size();
-        mArrivals.clear();
-        notifyItemRangeRemoved(0, listSize);
+        if(mArrivals != null) {
+            int listSize = mArrivals.size();
+            mArrivals.clear();
+            notifyItemRangeRemoved(0, listSize);
+        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

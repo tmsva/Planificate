@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private AlertDialog addBipDialog;
 
     private FrameLayout frameLayout;
-    BipStatusFragment bipFragment;
     private QueryServicesFragment queryServicesFragment;
     private Fragment activeFragment;
 
@@ -39,9 +38,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             case R.id.nav_main:
                 setMainNavFragment(queryServicesFragment.getClass().getSimpleName());
-                return true;
-            case R.id.nav_bip_status:
-                setMainNavFragment(bipFragment.getClass().getSimpleName());
                 return true;
         }
         return false;
@@ -60,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void showMetroPlane() {
         fragmentManager.beginTransaction().hide(activeFragment).commit();
+        hideSoftKeyboard();
         frameLayout.findViewById(R.id.pv_metro_plane).setVisibility(View.VISIBLE);
     }
 
@@ -90,14 +87,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initComponents() {
-
-        bipFragment = new BipStatusFragment();
-
         queryServicesFragment = new QueryServicesFragment();
 
         imeManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        addFragments(new Fragment[] {bipFragment, queryServicesFragment});
+        addFragments(new Fragment[] {queryServicesFragment});
 
         initViewModel();
     }

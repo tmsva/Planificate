@@ -50,15 +50,11 @@ public class MainActivityRepository {
                 .create(TransantiagoService.class);
     }
 
-    public void insertBip(Bip bip) {
-        new insertAsyncTask(mBipDao).execute(bip);
-    }
+    public void insertBip(Bip bip) { new insertAsyncTask(mBipDao).execute(bip); }
     private static class insertAsyncTask extends AsyncTask<Bip, Void, Void> {
         private BipDao mAsyncTaskDao;
 
-        insertAsyncTask(BipDao bipDao) {
-            mAsyncTaskDao = bipDao;
-        }
+        insertAsyncTask(BipDao bipDao) { mAsyncTaskDao = bipDao; }
 
         @Override
         protected Void doInBackground(final Bip... params) {
@@ -67,7 +63,7 @@ public class MainActivityRepository {
         }
     }
 
-    public void getNextArrivalsBy(String stopId) {
+    public void getNextArrivalsBy(final String stopId) {
         transantiagoService.getNextArrivalsBy(stopId).enqueue(new Callback<ArrivalsRs>() {
             @Override
             public void onResponse(Call<ArrivalsRs> call, Response<ArrivalsRs> response) {
@@ -77,7 +73,6 @@ public class MainActivityRepository {
                     mArrivals.setValue(response.body());
                 else mArrivals.setValue(null);
             }
-
             @Override
             public void onFailure(Call<ArrivalsRs> call, Throwable t) {
                 retryQueryNextArrivals++;
@@ -90,17 +85,11 @@ public class MainActivityRepository {
         });
     }
 
-    public LiveData<BipRs> getDefaultBip() {
-        return mDefaultBip;
-    }
+    public LiveData<BipRs> getDefaultBip() { return mDefaultBip; }
 
-    public LiveData<List<Bip>> getBipList() {
-        return mBipList;
-    }
+    public LiveData<List<Bip>> getBipList() { return mBipList; }
 
-    public LiveData<ArrivalsRs> getArrivals() {
-        return mArrivals;
-    }
+    public LiveData<ArrivalsRs> getArrivals() { return mArrivals; }
 
     public void getMapForLocation(double longitude, double latitude) {
         transantiagoService.getMapForLocation(longitude, latitude).enqueue(new Callback<MapRs>() {
@@ -126,8 +115,9 @@ public class MainActivityRepository {
 
     public void getBipBalance() {
         List<Bip> bipList = mBipList.getValue();
-        if(bipList == null || bipList.size() < 1) return;
-        else {
+        if(bipList == null || bipList.size() < 1) {
+            Toast.makeText(mApplication, "No hay datos guardados de tarjetas bip!", Toast.LENGTH_SHORT).show();
+        } else {
             int bipId = bipList.get(0).getId();
             bipService.getBipBalance(bipId).enqueue(new Callback<BipRs>() {
                 @Override

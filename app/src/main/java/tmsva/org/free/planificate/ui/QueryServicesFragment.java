@@ -33,13 +33,14 @@ public class QueryServicesFragment extends Fragment implements View.OnClickListe
 
     private static final int REQUEST_LOCATION = 1289;
     private EditText mEdtStop;
+    private EditText mEdtService;
     private Button btnQueryServices;
     private Button btnServicesByLocation;
     private ProgressBar progressBar;
     private RecyclerView rvArrivals;
     private QueryServicesAdapter mAdapter;
 
-    private static Location mLocation;
+    private static Location mCurrentLocation;
     private FusedLocationProviderClient mFusedLocationClient;
     private MainActivityViewModel mViewModel;
 
@@ -63,11 +64,9 @@ public class QueryServicesFragment extends Fragment implements View.OnClickListe
         mViewModel.getArrivals().observe(this, this::setAdapter);
     }
 
-    protected void setAdapter(ArrivalsRs arrivalsRs) {
-        btnQueryServices.setEnabled(true);
-        mEdtStop.setEnabled(true);
+    private void setAdapter(ArrivalsRs arrivalsRs) {
+        enableQueryViews(true);
         ((MainActivity) getActivity()).hideSoftKeyboard();
-        mAdapter.clear();
         if(arrivalsRs != null) mAdapter.updateArrivals(arrivalsRs.getArrivals());
         else Toaster.show(getContext(), R.string.services_null_response);
         progressBar.setVisibility(View.GONE);
@@ -93,6 +92,7 @@ public class QueryServicesFragment extends Fragment implements View.OnClickListe
             btnServicesByLocation = v.findViewById(R.id.btn_services_by_location);
             mEdtStop = v.findViewById(R.id.edt_stop);
             progressBar = v.findViewById(R.id.progressbar);
+            mEdtService = v.findViewById(R.id.edt_service);
             btnQueryServices.setOnClickListener(this);
             btnServicesByLocation.setOnClickListener(this);
         }
@@ -110,20 +110,20 @@ public class QueryServicesFragment extends Fragment implements View.OnClickListe
                 if(ActivityCompat.checkSelfPermission(getActivity(),
                         Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), location -> {
-                        mLocation = location;
+                        mCurrentLocation = location;
                         getClosestStops();
                     });
                 } else {
                     if(shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION))
                         Toast.makeText(getActivity(), "Location permission is needed to use this functionality", Toast.LENGTH_SHORT).show();
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+                    requestPermissions(new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
                 }
                 break;
             case R.id.btn_query_services:
                 String stopId = getEdtStopText();
                 if(validateQuery(stopId)) {
-                    btnQueryServices.setEnabled(false);
-                    mEdtStop.setEnabled(false);
+                    enableQueryViews(false);
+                    mAdapter.clear();
                     ((MainActivity) getActivity()).hideSoftKeyboard();
                     progressBar.setVisibility(View.VISIBLE);
                     mViewModel.getNextArrivalsBy(stopId);
@@ -132,11 +132,18 @@ public class QueryServicesFragment extends Fragment implements View.OnClickListe
         }
     }
 
+    private void enableQueryViews(boolean enable) {
+        mEdtStop.setEnabled(enable);
+        btnQueryServices.setEnabled(enable);
+        mEdtService.setEnabled(enable);
+        btnServicesByLocation.setEnabled(enable);
+    }
+
     //TODO activate Fused Location Provider client (page - Receive location updates | ADevs)
     private void getClosestStops() {
-        if (mLocation != null) {
-            double longitude = mLocation.getLongitude();
-            double latitude = mLocation.getLatitude();
+        if (mCurrentLocation != null) {
+            double longitude = mCurrentLocation.getLongitude();
+            double latitude = mCurrentLocation.getLatitude();
             mViewModel.getMapForLocation(longitude, latitude);
         } else Toast.makeText(getActivity(), "Can't find your location", Toast.LENGTH_SHORT).show();
     }
